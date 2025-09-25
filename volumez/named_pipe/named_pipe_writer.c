@@ -23,8 +23,8 @@ int main() {
     mkfifo(fifo, 0666); // create fifo in the above path
 
     /*
-	open call is blocking until there is another process that read 
-	from the fifo
+	This open() syscall is blocking until there is another process 
+that reads from the fifo.
     */
     int fd = open(fifo, O_WRONLY); // tries to open the fifo in the path
 
