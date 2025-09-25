@@ -32,10 +32,24 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    if (cpid1 == 0) {
+    if (cpid1 == 0) { // Child
         // Redirect stdout to pipe write end
-        dup2(pipefd[1], STDOUT_FILENO);
+	/*
+	    This tells the newfd (which is 1 in this case 
+of STDOUT) to refer to the same fd object that is pointed by oldfd
+        */
+        dup2(/*oldfd*/pipefd[1], /*newfd*/STDOUT_FILENO);
+
+	/*
+	We close the read end because this is the writer process
+	*/
         close(pipefd[0]); // Close unused read end
+	
+	/*
+	We close the write end because the STDOUT_FILENO is now 
+	the handle of the write end of the pipe, so we don't need
+	this second handle to the same fd object
+	*/
         close(pipefd[1]);
 
         execve("/bin/grep", grep_args, NULL);
@@ -50,7 +64,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    if (cpid2 == 0) {
+    if (cpid2 == 0) { // Child
         // Redirect stdin to pipe read end
         dup2(pipefd[0], STDIN_FILENO);
         close(pipefd[1]); // Close unused write end
