@@ -17,7 +17,7 @@ int minMoves(int n, int startRow, int startCol, int endRow, int endCol) {
     };
 
 
-    unordered_set<long> visited;
+    unordered_set<long long> visited;
     /*
 	We use queue, which is STL FIFO enforced by the CPP lib.
 	In the underlying, it uses deque, which is double-ended queue,

@@ -5,6 +5,17 @@ using namespace std;
 #include <tuple>
 #include <set>
 #include <deque>
+
+/*
+This is the original solution of mine
+
+Comments are:
+1. ineffiecnt memory usage to store the whole path. it is enough to 
+store the number of steps
+2. the usage of list for the directions variable is not optimized, since 
+the list is good for easy insertion/delete in the middle, but in our 
+case since we don't change the list, it is better to use vector
+*/
 int minMoves(int n, int startRow, int startCol, int endRow, int endCol) {
 
     list<tuple<int, int>> directions = { make_tuple(-1, -2), make_tuple(-2, -1), make_tuple(-2, 1), make_tuple(-1, 2), make_tuple(1, 2), make_tuple(2, 1), make_tuple(2, -1), make_tuple(1, -2) };

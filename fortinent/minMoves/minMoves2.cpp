@@ -4,6 +4,19 @@ using namespace std;
 #include <set>
 #include <vector>
 
+
+/*
+Comments are:
+1. No need to track the whole path. it is enough to track the number of 
+steps so far.
+2.
+vector<vector<int>> newPath = path;
+This line is too expensive
+3. 
+set<vector<int>> visited;
+  a. unordered_set would be better.
+  b. pair is faster than vector
+*/
 int minMoves(int n, int startRow, int startCol, int endRow, int endCol) {
         set<vector<int>> visited;
         vector<vector<vector<int>>> queue;
