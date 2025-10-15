@@ -54,19 +54,20 @@ int main() {
     vector<pair<int, int>> res = findSubArrays(arr);
 
 #if __cplusplus >= 201703L 
-    for (const auto &[start, end] : res) {
-        cout << "start: " << start << " end: " << end << endl;
-    }
-#elif __cplusplus >= 201103L
-
 /*
-    This is the warning you get if you compile this code with c++17:
+    This is the warning you get if you compile this code with c++11:
 
     findSubArrays.cpp: In function ‘int main()’:
 findSubArrays.cpp:43:22: warning: structured bindings only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
    43 |     for (const auto &[start, end] : res) {
       |        
 */
+
+
+    for (const auto &[start, end] : res) {
+        cout << "start: " << start << " end: " << end << endl;
+    }
+#elif __cplusplus >= 201103L
 
     for (auto p : res) {
         cout << "start: " << p.first << " end: " << p.second << endl;
