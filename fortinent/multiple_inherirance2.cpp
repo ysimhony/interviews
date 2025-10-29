@@ -1,3 +1,38 @@
+/*
+
+This example demonstrate that in multiple inheritance the pointer of the 
+object is changed according to the parent class pointer.
+
+The reason for that is that is the layout of the object:
++-------------------------+
+|  Base1 vptr → Base1 vtbl|
+|  Base1 data (none)      |
++-------------------------+
+|  Base2 vptr → Base2 vtbl|
+|  Base2 data (none)      |
++-------------------------+
+|  Derived data (none)    |
++-------------------------+
+
+Thus, having two vtables and two vptr for each parent class.
+
+yacovs@MOE-KT-6565923:~/interviews/fortinent$ g++ -ggdb -o multiple_inherirance2 multiple_inherirance2.cpp
+yacovs@MOE-KT-6565923:~/interviews/fortinent$ ./multiple_inherirance2
+Calling through Base1*:
+Base1::f1() called
+Base1::f2() called
+
+Calling through Base2*:
+Base2::g1() called
+Base2::g2() called
+
+Addresses:
+  &d =        0x7fffd42ad000
+  (Base1*) &d = 0x7fffd42ad000
+  (Base2*) &d = 0x7fffd42ad008
+
+*/
+
 #include <iostream>
 
 class Base1 {
