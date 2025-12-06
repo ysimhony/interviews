@@ -1,3 +1,38 @@
+/*
+This example show the memory layout of cpp object.
+which is:
++--------------------+
+| vptr (8 bytes)     |
++--------------------+
+| other members...   |
++--------------------+
+
+in our case:
++--------------------+
+| vptr (8 bytes)     |
++--------------------+
+| a (4 bytes)        |
+| b (4 bytes)        |
+| c (4 bytes)        |
+| d (4 bytes)        |
++--------------------+
+
+so the total size of the Derived class is 24 bytes as seen below.
+
+yacovs@MOE-KT-6565923:~/projects/interviews/fortinent$ ./inheritance_memory_layout
+Size of Base:    16 bytes
+Size of Derived: 24 bytes
+
+Address of object:        0x7ffcb1727160
+Address of Base subobject:0x7ffcb1727160
+
+Address of obj.a: 0x7ffcb1727168
+Address of obj.b: 0x7ffcb172716c
+Address of obj.c: 0x7ffcb1727170
+Address of obj.d: 0x7ffcb1727174
+
+*/
+
 #include <iostream>
 
 class Base {
