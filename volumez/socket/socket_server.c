@@ -12,7 +12,14 @@ int main() {
     int server_fd, client_fd;
     struct sockaddr_un addr;
     char buffer[256];
+    
+    /*
+    AF_UNIX mean that we are comminicating in the unix machine via file 
+path, and not over the network 
 
+    SOCK_STREAM means that we are using TCP-like connection.
+    we can have UDP-like connection by the flag SOCK_DGRAM
+    */
     server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
     if (server_fd == -1) {
         perror("socket");
