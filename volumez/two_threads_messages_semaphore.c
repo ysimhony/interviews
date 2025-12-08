@@ -11,6 +11,22 @@ char message[MAX_MSG_LEN];
 sem_t sem_msg_ready; // sender → receiver
 sem_t sem_msg_read;  // receiver → sender
 
+
+/*
+This example demonstrates how we can control the comminication between 
+two threads by using two semaphores
+1. sem_msg_ready - which the sender notifies the receiver that the 
+message is ready to be read
+2. &sem_msg_read = which the receiver notifies the sender that it read 
+the message, and that the sender can send its next message
+
+yacovs@MOE-KT-6565923:~/projects/interviews/volumez$ ./two_threads_messages_semaphore
+[Receiver] Got message: Hello from sender!
+[Receiver] Got message: How are you?
+[Receiver] Got message: Semaphore communication.
+[Receiver] Got message: Bye!
+
+*/
 void* sender_thread(void* arg) {
     const char* messages[] = {
         "Hello from sender!",
