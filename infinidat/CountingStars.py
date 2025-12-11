@@ -1,7 +1,7 @@
 import heapq
 
 
-def CountingStars(stars_indexes_arr)->None:
+def CountingStars(stars_indexes_arr: list[list[int]])->None:
     heap = []
     m = len(stars_indexes_arr)
     n = len(stars_indexes_arr[0])
