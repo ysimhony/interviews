@@ -18,51 +18,6 @@ using namespace std;
 using namespace chrono;
 
 
-// #define NUM_OF_THREADS 3
-
-
-// vector<vector<unique_ptr<floatMessageBuffer>>> mb(NUM_OF_THREADS);
-// vector<vector<schd>> schds;
-
-
-
-
-// void task(int id, vector<float>& ranges, vector<float*>& out_vals) {
-
-//     // Calcualate sleep period for each thread based on the id
-//     int cycle_period_in_msec = pow(2, id) * 10;
-    
-//     // Create oscillator for the 2 variables
-//     vector<unique_ptr<oscillator>> oscillators;
-//     oscillators.push_back(make_unique<oscillator>(steady_clock::now(), ranges[0]));
-//     oscillators.push_back(make_unique<oscillator>(steady_clock::now(), ranges[1]));
-
-//     while (true) {
-        
-//         // sleep 
-//         this_thread::sleep_for(milliseconds(cycle_period_in_msec)); 
-        
-//         // Read incoming messages and updating main storage
-//         for (int src_id=0, i=0; src_id<NUM_OF_THREADS; src_id++) {
-//             if (src_id==id) continue;
-//             mb[src_id][id]->read(out_vals[i++]);        
-//         }        
-
-//         // send messages to other threads
-//         for (int dst_id=0, i=0; dst_id<NUM_OF_THREADS; dst_id++) {
-//             if (dst_id==id) continue;
-
-//             if (schds[id][dst_id].can_send()) {
-//                 float val = oscillators[i++]->read_val();
-//                 mb[id][dst_id]->write(val); 
-//             }           
-//         }        
-//     }
-// }
-
-// using TaskRef = reference_wrapper<Task>;
-
-
 int main() {
     // main storage
     float x=0, y=0, z=0;

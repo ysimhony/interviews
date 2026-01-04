@@ -11,7 +11,6 @@ public:
     oscillator(std::chrono::steady_clock::time_point _start, float _a):
         start(_start), a(_a) {};
 
-    // Member function to read current value
     virtual void write(float val){
         return;
     };

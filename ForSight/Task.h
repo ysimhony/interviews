@@ -22,11 +22,6 @@ public:
 
     virtual void process(){
         node->read(*target);
-
-        // auto now = std::chrono::system_clock::now();
-        // auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-        // std::cout << now_ms.count() << ": " << *target << endl;          
-
     }
     virtual bool canProcess(){
         return true;
@@ -95,7 +90,6 @@ public:
 
 protected:
     vector<OutputBinding> outputs;
-    virtual void onTick(float t) = 0;
     int period;
     string name_;
     vector<InputBinding> inputs;
@@ -106,11 +100,7 @@ protected:
 
         while (true) {
             this_thread::sleep_for(
-                chrono::milliseconds(period));
-
-            // auto now = std::chrono::system_clock::now();
-            // auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-            // std::cout << name_ << ":" << now_ms.count() << std::endl;  
+            chrono::milliseconds(period));
 
             for (auto& in : inputs) {
                 if (in.canProcess()){
@@ -131,88 +121,22 @@ protected:
 
 class Task10 : public Task {
 public:
-    Task10() : Task(10, "Task10") {
-        // osc1 = oscillator(chrono::_V2::steady_clock::now(), 1);
-        // oscPI = oscillator(chrono::_V2::steady_clock::now(), M_PI);
-    }
+    Task10() : Task(10, "Task10") {}
 
 protected:
-    // virtual void run() {
-    //     auto start = chrono::steady_clock::now();
-
-    //     while (true) {
-    //         this_thread::sleep_for(
-    //             chrono::milliseconds(period));
-
-    //         auto now = std::chrono::system_clock::now();
-    //         auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-    //         std::cout << name_ << ":" << now_ms.count() << std::endl;  
-
-    //         for (auto& in : inputs) {
-    //             if (in.canProcess()){
-    //                 in.process();
-    //             }
-    //         }
-
-    //         for (auto& output: outputs) {
-    //             if (output.canProcess()){
-    //                 output.process();
-    //             }
-    //         }
-    //     }
-    // }
-    void onTick(float t) override {
-    //     static int tick = 0;
-    //     float tmp_float;
-    //     osc1.read(tmp_float);
-    //     outputs[0].ch1->write(tmp_float);
-    //     if (tick++ % 2 == 0)
-    //         outputs[1].ch1->write(tmp_float);
-    }
-private:
-    // oscillator osc1;
-    // oscillator oscPI;
 };
 
 class Task20 : public Task {
 public:
-    Task20() : Task(20, "Task20") {
-        // osc1 = oscillator(chrono::_V2::steady_clock::now(), 1);
-        // oscPI = oscillator(chrono::_V2::steady_clock::now(), M_PI);
-    }
+    Task20() : Task(20, "Task20") {}
 
 protected:
-    void onTick(float t) override {
-    //     static int tick = 0;
-    //     float tmp_float;
-    //     osc1.read(tmp_float);
-    //     outputs[0].ch1->write(tmp_float);
-    //     if (tick++ % 2 == 0)
-    //         outputs[1].ch1->write(tmp_float);
-    }
-private:
-    // oscillator osc1;
-    // oscillator oscPI;
 };
 
 class Task40 : public Task {
 public:
-    Task40() : Task(40, "Task40") {
-        // osc1 = oscillator(chrono::_V2::steady_clock::now(), 1);
-        // oscPI = oscillator(chrono::_V2::steady_clock::now(), M_PI);
-    }
+    Task40() : Task(40, "Task40") {}
 
 protected:
-    void onTick(float t) override {
-    //     static int tick = 0;
-    //     float tmp_float;
-    //     osc1.read(tmp_float);        
-    //     outputs[0].ch1->write(tmp_float);
-    //     if (tick++ % 2 == 0)
-    //         outputs[1].ch1->write(tmp_float);
-    }
-private:
-    // oscillator osc1;
-    // oscillator oscPI;
 };
 
