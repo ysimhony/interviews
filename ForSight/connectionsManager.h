@@ -22,11 +22,14 @@ private:
 
 class connectionsManager {
 public:
-    connectionsManager(INodeFactory &_nodeFactory): nodeFactory(_nodeFactory){}
+    connectionsManager(INodeFactory &_nodeFactory): 
+        nodeFactory(_nodeFactory), shutdown_flag(false){}
 
     void addTask(Task* task) {
-        name2task[task->name()] = task;        
+        name2task[task->name()] = task;    
+        task->setShutdownFlag(&shutdown_flag);    
     }
+
     void addConnection(const std::string& varName,
                         INode* source, 
                         float* target, 
@@ -56,14 +59,25 @@ public:
         std::cout << "starting all threads" << std::endl;
         for (const auto& pair: name2task) {
             pair.second->start();
-        }
-        
+        }    
+    }
+
+    void stop() {
+        std::cout << "stopping all threads" << std::endl;
+        shutdown_flag = true;
+    }
+
+    void wait() {
         for (auto& pair : name2task) {
             pair.second->join();
-        }        
+        }
+        std::cout << "all threads have joined" << std::endl;
     }
+
+
 private:
     std::unordered_map<std::string, Task*> name2task;
     std::unordered_map<std::string, INode*> name2messageBuffer;
     INodeFactory &nodeFactory;
+    std::atomic<bool> shutdown_flag;
 };

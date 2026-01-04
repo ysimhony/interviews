@@ -3,8 +3,9 @@
 #include <thread>
 #include <chrono>
 #include <string>
-#include "INode.h"
+#include <atomic>
 
+#include "INode.h"
 class IBinding {
 public:
     virtual ~IBinding() = default;
@@ -66,6 +67,9 @@ public:
 
     virtual ~Task() = default;
 
+    void setShutdownFlag(std::atomic<bool>* flag) {
+        shutdown_flag = flag;
+    }
     const std::string& name() const { return name_; }
 
     void addInput(INode* ch, float* target) {
@@ -91,11 +95,12 @@ protected:
     std::string name_;
     std::vector<InputBinding> inputs;
     std::thread worker;
+    std::atomic<bool>* shutdown_flag;
 
     virtual void run() {
         auto start = std::chrono::steady_clock::now();
 
-        while (true) {
+        while (shutdown_flag && !(*shutdown_flag)) {
             std::this_thread::sleep_for(std::chrono::milliseconds(period));
 
             for (auto& in : inputs) {
@@ -111,8 +116,6 @@ protected:
             }
         }
     }
-
-
 };
 
 class Task10 : public Task {

@@ -55,6 +55,17 @@ int main() {
 
         cm.start();
 
+        // Let the tasks run for a while
+        cout << "Tasks are running for 5 seconds..." << endl;
+        this_thread::sleep_for(seconds(5));
+        
+         // Now, initiate the graceful shutdown
+         cm.stop();
+
+         // Wait for all threads to finish
+         cm.wait();
+
+
         return 0;
 
     } catch (const connectionManagerError &e) {
