@@ -2,9 +2,6 @@
 #include <chrono>
 #include "INode.h"
 
-using namespace std;
-using namespace chrono;
-
 class oscillator: public INode {
 public:
     // Constructor
@@ -19,8 +16,9 @@ public:
         constexpr float SLOPE = 4.0f;
         constexpr float HALF_PERIOD = 0.5f;
 
-        auto now = steady_clock::now();        
-        long long total_ms = duration_cast<milliseconds>(now - start).count();
+        auto now = std::chrono::steady_clock::now();        
+        long long total_ms = 
+            std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
         long long ms_only = total_ms % 1000;
         float t_now = float(ms_only) / 1000;
 

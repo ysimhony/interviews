@@ -5,9 +5,6 @@
 #include <string>
 #include "INode.h"
 
-using namespace std;
-using namespace chrono;
-
 class IBinding {
 public:
     virtual ~IBinding() = default;
@@ -37,7 +34,7 @@ public:
     OutputBinding(INode* _ch1, INode* _ch2, int _periodMs):
         ch1(_ch1), ch2(_ch2), periodMs(_periodMs){
 
-        lastProcess = steady_clock::now();
+        lastProcess = std::chrono::steady_clock::now();
     }
 
     virtual void process(){
@@ -45,10 +42,10 @@ public:
         ch1->read(tmp_float);
         ch2->write(tmp_float);
 
-        lastProcess = steady_clock::now(); 
+        lastProcess = std::chrono::steady_clock::now(); 
     }
     virtual bool canProcess(){
-        if ((steady_clock::now() - lastProcess) >= chrono::milliseconds(periodMs)){
+        if ((std::chrono::steady_clock::now() - lastProcess) >= std::chrono::milliseconds(periodMs)){
             return true;
         }
 
@@ -58,18 +55,18 @@ private:
     INode* ch1;
     INode* ch2;
     int periodMs = 0;
-    steady_clock::time_point lastProcess;
+    std::chrono::steady_clock::time_point lastProcess;
 };
 
 
 class Task {
 public:
-    Task(int periodMs, string name)
+    Task(int periodMs, std::string name)
         : period(periodMs), name_(move(name)) {}
 
     virtual ~Task() = default;
 
-    const string& name() const { return name_; }
+    const std::string& name() const { return name_; }
 
     void addInput(INode* ch, float* target) {
         inputs.push_back({ch, target});
@@ -80,8 +77,8 @@ public:
     }
 
     void start() {
-        cout << "starting thread " << name_ << endl;
-        worker = thread(&Task::run, this);
+        std::cout << "starting thread " << name_ << std::endl;
+        worker = std::thread(&Task::run, this);
     }
 
     void join() {
@@ -89,18 +86,17 @@ public:
     }
 
 protected:
-    vector<OutputBinding> outputs;
+    std::vector<OutputBinding> outputs;
     int period;
-    string name_;
-    vector<InputBinding> inputs;
-    thread worker;
+    std::string name_;
+    std::vector<InputBinding> inputs;
+    std::thread worker;
 
     virtual void run() {
-        auto start = chrono::steady_clock::now();
+        auto start = std::chrono::steady_clock::now();
 
         while (true) {
-            this_thread::sleep_for(
-            chrono::milliseconds(period));
+            std::this_thread::sleep_for(std::chrono::milliseconds(period));
 
             for (auto& in : inputs) {
                 if (in.canProcess()){
