@@ -1,8 +1,11 @@
 #pragma once
+#include <memory>
+
 #include "INode.h"
 
 class INodeFactory {
 public:
     virtual ~INodeFactory() = default;
-    virtual INode* create() = 0;
+    virtual std::unique_ptr<INode> create() = 0; 
 };
+  

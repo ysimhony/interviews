@@ -5,7 +5,7 @@
 
 class FloatMessageBufferFactory : public INodeFactory {
 public:
-    INode* create() override {
-        return new floatMessageBuffer();
-    }
+    std::unique_ptr<INode> create() override {
+        return std::make_unique<floatMessageBuffer>();
+    }         
 };

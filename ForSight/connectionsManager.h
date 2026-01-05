@@ -51,7 +51,7 @@ public:
         }
         std::string buffer_name = tasks[0]->name() + tasks[1]->name() + varName;
 
-        name2messageBuffer[buffer_name] = std::unique_ptr<INode>(nodeFactory.create());
+        name2messageBuffer[buffer_name] = nodeFactory.create();
         tasks[0]->addOutput(source, name2messageBuffer[buffer_name].get(), tasks_period_msec);
         tasks[1]->addInput(name2messageBuffer[buffer_name].get(), target);
     }
