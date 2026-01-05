@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <iostream>
+#include <atomic>
+#include <memory>
 
 #include "INode.h"
 #include "Task.h"
@@ -22,27 +23,27 @@ private:
 
 class connectionsManager {
 public:
-    connectionsManager(INodeFactory &_nodeFactory): 
-        nodeFactory(_nodeFactory), shutdown_flag(false){}
+    connectionsManager(INodeFactory &_nodeFactory)
+        : nodeFactory(_nodeFactory), shutdown_flag(false) {}
 
-    void addTask(Task* task) {
-        name2task[task->name()] = task;    
-        task->setShutdownFlag(&shutdown_flag);    
+    void addTask(std::unique_ptr<Task> task) {
+        task->setShutdownFlag(&shutdown_flag);
+        name2task[task->name()] = std::move(task);
     }
 
     void addConnection(const std::string& varName,
-                        INode* source, 
-                        float* target, 
+                        INode* source,
+                        float* target,
                         const std::vector<Task*>& tasks,
                         int tasks_period_msec) {
-        
+
         if (!source || !target) {
             throw connectionManagerError("Source and Target must be provided");
         }
         if (tasks.size() != 2) {
             throw connectionManagerError("There should be 2 tasks in the path");
         }
-        
+
         for (auto& task: tasks) {
             if (name2task.find(task->name()) == name2task.end()) {
                 throw connectionManagerError("Could not find task: " + task->name());
@@ -50,16 +51,16 @@ public:
         }
         std::string buffer_name = tasks[0]->name() + tasks[1]->name() + varName;
 
-        name2messageBuffer[buffer_name] = nodeFactory.create();
-        tasks[0]->addOutput(source, name2messageBuffer[buffer_name], tasks_period_msec);
-        tasks[1]->addInput(name2messageBuffer[buffer_name], target);
+        name2messageBuffer[buffer_name] = std::unique_ptr<INode>(nodeFactory.create());
+        tasks[0]->addOutput(source, name2messageBuffer[buffer_name].get(), tasks_period_msec);
+        tasks[1]->addInput(name2messageBuffer[buffer_name].get(), target);
     }
 
     void start() {
         std::cout << "starting all threads" << std::endl;
         for (const auto& pair: name2task) {
             pair.second->start();
-        }    
+        }
     }
 
     void stop() {
@@ -74,10 +75,9 @@ public:
         std::cout << "all threads have joined" << std::endl;
     }
 
-
 private:
-    std::unordered_map<std::string, Task*> name2task;
-    std::unordered_map<std::string, INode*> name2messageBuffer;
+    std::unordered_map<std::string, std::unique_ptr<Task>> name2task;
+    std::unordered_map<std::string, std::unique_ptr<INode>> name2messageBuffer;
     INodeFactory &nodeFactory;
     std::atomic<bool> shutdown_flag;
 };
