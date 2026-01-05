@@ -89,19 +89,20 @@ public:
         worker.join();
     }
 
-protected:
+private:
     std::vector<OutputBinding> outputs;
     int period;
     std::string name_;
     std::vector<InputBinding> inputs;
     std::thread worker;
     std::atomic<bool>* shutdown_flag;
-
+          
     virtual void run() {
-        auto start = std::chrono::steady_clock::now();
+        // auto start = std::chrono::steady_clock::now();
+        auto next_wake_time = std::chrono::steady_clock::now();
+        const auto step = std::chrono::milliseconds(period);
 
         while (shutdown_flag && !(*shutdown_flag)) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(period));
 
             for (auto& in : inputs) {
                 if (in.canProcess()){
@@ -114,6 +115,10 @@ protected:
                     output.process();
                 }
             }
+
+            next_wake_time += step;
+
+            std::this_thread::sleep_until(next_wake_time);
         }
     }
 };
