@@ -27,6 +27,9 @@ public:
         : nodeFactory(_nodeFactory), shutdown_flag(false) {}
 
     void addTask(std::unique_ptr<Task> task) {
+        if (name2task.find(task->name()) != name2task.end()) {
+            throw connectionManagerError("Task " + task->name() + " already exists");            
+        }
         task->setShutdownFlag(&shutdown_flag);
         name2task[task->name()] = std::move(task);
     }

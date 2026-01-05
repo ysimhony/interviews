@@ -118,24 +118,5 @@ protected:
     }
 };
 
-class Task10 : public Task {
-public:
-    Task10() : Task(10, "Task10") {}
 
-protected:
-};
-
-class Task20 : public Task {
-public:
-    Task20() : Task(20, "Task20") {}
-
-protected:
-};
-
-class Task40 : public Task {
-public:
-    Task40() : Task(40, "Task40") {}
-
-protected:
-};
 

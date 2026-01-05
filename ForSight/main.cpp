@@ -20,9 +20,9 @@ int main() {
     float x=0, y=0, z=0;
     float roll=0, pitch=0, yaw=0;
 
-    std::unique_ptr<Task10> task10 = std::make_unique<Task10>();
-    std::unique_ptr<Task20> task20 = std::make_unique<Task20>();
-    std::unique_ptr<Task40> task40 = std::make_unique<Task40>();
+    std::unique_ptr<Task> task10 = std::make_unique<Task>(10, "Task10");
+    std::unique_ptr<Task> task20 = std::make_unique<Task>(20, "Task20");
+    std::unique_ptr<Task> task40 = std::make_unique<Task>(40, "Task40");
 
     oscillator x_source(std::chrono::steady_clock::now(), 1);
     oscillator y_source(std::chrono::steady_clock::now(), 1);
