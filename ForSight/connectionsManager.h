@@ -9,7 +9,7 @@
 #include "INode.h"
 #include "Task.h"
 #include "INodeFactory.h"
-
+#include "mainStorage.h"
 
 class connectionManagerError : public std::exception {
 public:
@@ -23,8 +23,8 @@ private:
 
 class connectionsManager {
 public:
-    connectionsManager(INodeFactory &_nodeFactory)
-        : nodeFactory(_nodeFactory), shutdown_flag(false) {}
+    connectionsManager(INodeFactory &_nodeFactory, std::unique_ptr<mainStorage> main_storage_)
+        : nodeFactory(_nodeFactory), main_storage(std::move(main_storage_)), shutdown_flag(false) {}
 
     void addTask(std::unique_ptr<Task> task) {
         if (name2task.find(task->name()) != name2task.end()) {
@@ -34,6 +34,7 @@ public:
         name2task[task->name()] = std::move(task);
     }
 
+    mainStorage& getMainStorage() const { return *main_storage; }
     void addConnection(const std::string& varName,
                         INode* source,
                         float* target,
@@ -83,4 +84,5 @@ private:
     std::unordered_map<std::string, std::unique_ptr<INode>> name2messageBuffer;
     INodeFactory &nodeFactory;
     std::atomic<bool> shutdown_flag;
+    std::unique_ptr<mainStorage> main_storage;
 };

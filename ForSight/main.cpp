@@ -14,11 +14,11 @@
 #include "oscillator.h"
 #include "Task.h"
 #include "FloatMessageBufferFactory.h"
+#include "mainStorage.h"
 
 int main() {
-    // main storage
-    float x=0, y=0, z=0;
-    float roll=0, pitch=0, yaw=0;
+
+    std::unique_ptr<mainStorage> main_storage = std::make_unique<mainStorage>();
 
     std::unique_ptr<Task> task10 = std::make_unique<Task>(10, "Task10");
     std::unique_ptr<Task> task20 = std::make_unique<Task>(20, "Task20");
@@ -32,9 +32,11 @@ int main() {
     oscillator pitch_source(std::chrono::steady_clock::now(), M_PI);
     oscillator yaw_source(std::chrono::steady_clock::now(), M_PI);
 
+
     try {
         FloatMessageBufferFactory factory;
-        connectionsManager cm(factory);
+
+        connectionsManager cm(factory, std::move(main_storage));
 
         Task* p_task10 = task10.get();
         Task* p_task20 = task20.get();
@@ -44,14 +46,14 @@ int main() {
         cm.addTask(std::move(task20));
         cm.addTask(std::move(task40));
 
-        cm.addConnection("x", &x_source, &x, {p_task20, p_task10}, 20);
-        cm.addConnection("y", &y_source, &y, {p_task40, p_task10}, 40);
+        cm.addConnection("x", &x_source, &cm.getMainStorage().x, {p_task20, p_task10}, 20);
+        cm.addConnection("y", &y_source, &cm.getMainStorage().y, {p_task40, p_task10}, 40);
 
-        cm.addConnection("z", &z_source, &z, {p_task10, p_task20}, 20);
-        cm.addConnection("yaw", &yaw_source, &yaw, {p_task40, p_task20}, 40);
+        cm.addConnection("z", &z_source, &cm.getMainStorage().z, {p_task10, p_task20}, 20);
+        cm.addConnection("yaw", &yaw_source, &cm.getMainStorage().yaw, {p_task40, p_task20}, 40);
 
-        cm.addConnection("pitch", &pitch_source, &pitch, {p_task20, p_task40}, 40);
-        cm.addConnection("roll", &roll_source, &roll, {p_task10, p_task40}, 40);
+        cm.addConnection("pitch", &pitch_source, &cm.getMainStorage().pitch, {p_task20, p_task40}, 40);
+        cm.addConnection("roll", &roll_source, &cm.getMainStorage().roll, {p_task10, p_task40}, 40);
 
         cm.start();
 
